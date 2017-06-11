@@ -1,6 +1,7 @@
 package com.ujuezeoke.bot.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.ujuezeoke.bot.template.model.request.CurrentIntent;
 import com.ujuezeoke.bot.template.model.request.LexBotRequest;
 import com.ujuezeoke.bot.template.model.response.LexBotResponse;
@@ -9,6 +10,7 @@ import com.ujuezeoke.bot.template.model.response.model.dialogaction.CloseDialogA
 import com.ujuezeoke.bot.template.model.response.model.dialogaction.ElicitIntentDialogAction;
 import com.ujuezeoke.bot.template.model.response.model.dialogaction.FulfillmentState;
 import com.ujuezeoke.bot.template.model.response.model.dialogaction.message.DialogActionMessageContentType;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -25,6 +27,11 @@ public class AdaLambdaHandlerTest {
     private LexBotRequest lexBotRequest = mock(LexBotRequest.class);
     private Context context = mock(Context.class);
     private CurrentIntent currentIntent = mock(CurrentIntent.class);
+
+    @Before
+    public void setUp(){
+        when(context.getLogger()).thenReturn(mock(LambdaLogger.class));
+    }
 
     @Test
     public void sendCloseFailedDialogActionLexResponse() {
