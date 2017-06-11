@@ -33,9 +33,9 @@ public class ListAdaArbiterGamesIntentHandler {
                                         .collect(joining("\n"))
                 ).withResponseCard(1, new GenericAttachments(
                         "Available Games",
-                        "",
-                        "",
-                        "",
+                        "the game",
+                        "http://www.ponderweasel.com/wp-content/uploads/2014/11/who-invented-rock-paper-scissors.png",
+                        "http://www.ponderweasel.com/wp-content/uploads/2014/11/who-invented-rock-paper-scissors.png",
                         buildButtons()
                 ))
                 .build();
