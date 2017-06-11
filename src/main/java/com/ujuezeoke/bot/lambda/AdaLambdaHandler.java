@@ -31,7 +31,7 @@ public class AdaLambdaHandler implements LexBotRequestHandler {
 
     private LexBotResponse processInput(LexBotRequest input) {
         switch (input.getCurrentIntent().getName()) {
-            case "AMAZON.HelpIntent":
+            case "GetAdaArbiterHelp":
                 return new AmazonHelpIntentHandler(input).process();
             default:
                 return new LexBotResponseBuilder()

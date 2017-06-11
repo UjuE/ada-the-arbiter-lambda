@@ -51,7 +51,7 @@ public class AdaLambdaHandlerTest {
 
     @Test
     public void sendElicitIntentDialogActionLexResponse() {
-        when(currentIntent.getName()).thenReturn("AMAZON.HelpIntent");
+        when(currentIntent.getName()).thenReturn("GetAdaArbiterHelp");
         when(lexBotRequest.getCurrentIntent()).thenReturn(currentIntent);
 
         final LexBotResponse lexBotResponse =
