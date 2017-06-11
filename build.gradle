@@ -1,0 +1,79 @@
+import com.amazonaws.auth.AWSCredentials
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider
+
+buildscript {
+    repositories {
+        mavenCentral()
+        dependencies {
+            classpath 'com.amazonaws:aws-java-sdk-core:1.11.5'
+        }
+    }
+    dependencies {
+        classpath 'com.amazonaws:aws-java-sdk-core:1.11.5'
+    }
+}
+
+group 'com.ujuezeoke.bot.lambda'
+version 'DEV-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+
+
+def fetchAwsCredentials = {
+    try {
+        return new EnvironmentVariableCredentialsProvider().credentials
+    } catch (Exception e) {
+        logger.debug('Unable to retrieve AWS credentials from profile, publishing to S3 will not be available.', e)
+        return null
+    }
+}
+AWSCredentials awsCredentials = fetchAwsCredentials()
+repositories {
+    mavenCentral()
+    maven {
+        url "s3://repo.ujuezeoke.com/releases"
+        credentials(AwsCredentials) {
+            accessKey = awsCredentials.AWSAccessKeyId
+            secretKey = awsCredentials.AWSSecretKey
+        }
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.8.9'
+
+    compile group: 'com.ujuezeoke.bot', name: 'lexbot-lambda-template', version: '14'
+    compile group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.1.0'
+    compile group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '1.3.0'
+    compile 'log4j:log4j:1.2.17'
+    compile 'org.slf4j:slf4j-api:1.7.10'
+    compile 'org.slf4j:slf4j-simple:1.7.10'
+}
+
+publishing {
+    repositories {
+        maven {
+            url "s3://repo.ujuezeoke.com/releases"
+            credentials(AwsCredentials) {
+                accessKey = awsCredentials.AWSAccessKeyId
+                secretKey = awsCredentials.AWSSecretKey
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.ujuezeoke.bot.lambda'
+            artifactId 'ada-the-arbiter-lambda'
+            version "$System.env.TRAVIS_BUILD_NUMBER"
+            from components.java
+        }
+    }
+}
+
+
+
