@@ -33,18 +33,19 @@ public class ListAdaArbiterGamesIntentHandler {
                                         .collect(joining("\n"))
                 ).withResponseCard(1, new GenericAttachments(
                         "Available Games",
-                        null,
-                        null,
-                        null,
+                        "",
+                        "",
+                        "",
                         buildButtons()
                 ))
                 .build();
+
     }
 
     private Buttons[] buildButtons() {
         return availableGamesMap.keySet()
                 .stream()
-                .map(gameName -> new Buttons(gameName, "Play "+gameName))
+                .map(gameName -> new Buttons(gameName, "Play " + gameName))
                 .collect(toList()).toArray(new Buttons[]{});
     }
 }
