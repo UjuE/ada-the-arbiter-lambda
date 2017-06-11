@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ujuezeoke.bot.lambda.handler.GetAdaArbiterHelpIntentHandler;
 import com.ujuezeoke.bot.lambda.handler.ListAdaArbiterGamesIntentHandler;
+import com.ujuezeoke.bot.lambda.handler.PlayGameIntentHandler;
 import com.ujuezeoke.bot.template.LexBotRequestHandler;
 import com.ujuezeoke.bot.template.model.request.LexBotRequest;
 import com.ujuezeoke.bot.template.model.response.LexBotResponse;
@@ -45,6 +46,8 @@ public class AdaLambdaHandler implements LexBotRequestHandler {
                 return new GetAdaArbiterHelpIntentHandler(input).process();
             case "ListAdaArbiterGames":
                 return new ListAdaArbiterGamesIntentHandler(AVAILABLE_GAMES_MAP).process();
+            case "PlayGame":
+                return new PlayGameIntentHandler(input, AVAILABLE_GAMES_MAP).process();
             default:
                 return new LexBotResponseBuilder()
                         .buildCloseDialogActionResponse()
