@@ -1,6 +1,7 @@
 package com.ujuezeoke.bot.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.ujuezeoke.bot.lambda.handler.AmazonHelpIntentHandler;
 import com.ujuezeoke.bot.template.LexBotRequestHandler;
 import com.ujuezeoke.bot.template.model.request.LexBotRequest;
 import com.ujuezeoke.bot.template.model.response.LexBotResponse;
@@ -15,10 +16,15 @@ import com.ujuezeoke.bot.template.model.response.model.dialogaction.message.Dial
 public class AdaLambdaHandler implements LexBotRequestHandler {
     @Override
     public LexBotResponse handleRequest(LexBotRequest input, Context context) {
-        return new LexBotResponseBuilder()
-                .buildCloseDialogActionResponse()
-                .withFulfilmentState(FulfillmentState.Failed)
-                .withMessage(DialogActionMessageContentType.PlainText, "Hmmmm... I did not understand what you said.")
-                .build();
+        switch (input.getCurrentIntent().getName()) {
+            case "AMAZON.HelpIntent":
+                return new AmazonHelpIntentHandler(input).process();
+            default:
+                return new LexBotResponseBuilder()
+                        .buildCloseDialogActionResponse()
+                        .withFulfilmentState(FulfillmentState.Failed)
+                        .withMessage(DialogActionMessageContentType.PlainText, "Hmmmm... I did not understand what you said.")
+                        .build();
+        }
     }
 }
