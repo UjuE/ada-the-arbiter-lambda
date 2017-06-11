@@ -10,6 +10,7 @@ import com.ujuezeoke.bot.template.model.response.model.dialogaction.message.Dial
 
 /**
  * Created by Obianuju Ezeoke on 11/06/2017.
+ * The entry point for the AWS Lambda
  */
 public class AdaLambdaHandler implements LexBotRequestHandler {
     @Override
