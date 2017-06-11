@@ -4,13 +4,22 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ujuezeoke.bot.lambda.handler.AmazonHelpIntentHandler;
+import com.ujuezeoke.bot.lambda.handler.GetAdaArbiterHelpIntentHandler;
+import com.ujuezeoke.bot.lambda.handler.ListAdaArbiterGamesIntentHandler;
 import com.ujuezeoke.bot.template.LexBotRequestHandler;
 import com.ujuezeoke.bot.template.model.request.LexBotRequest;
 import com.ujuezeoke.bot.template.model.response.LexBotResponse;
 import com.ujuezeoke.bot.template.model.response.LexBotResponseBuilder;
 import com.ujuezeoke.bot.template.model.response.model.dialogaction.FulfillmentState;
 import com.ujuezeoke.bot.template.model.response.model.dialogaction.message.DialogActionMessageContentType;
+import com.ujuezeoke.game.TwoPlayerGame;
+import com.ujuezeoke.game.TwoPlayerGameFactory;
+
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Created by Obianuju Ezeoke on 11/06/2017.
@@ -19,6 +28,7 @@ import com.ujuezeoke.bot.template.model.response.model.dialogaction.message.Dial
 public class AdaLambdaHandler implements LexBotRequestHandler {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final Map<String, TwoPlayerGame> AVAILABLE_GAMES_MAP = buildMapOfGames();
 
     @Override
     public LexBotResponse handleRequest(LexBotRequest input, Context context) {
@@ -32,7 +42,9 @@ public class AdaLambdaHandler implements LexBotRequestHandler {
     private LexBotResponse processInput(LexBotRequest input) {
         switch (input.getCurrentIntent().getName()) {
             case "GetAdaArbiterHelp":
-                return new AmazonHelpIntentHandler(input).process();
+                return new GetAdaArbiterHelpIntentHandler(input).process();
+            case "ListAdaArbiterGames":
+                return new ListAdaArbiterGamesIntentHandler(AVAILABLE_GAMES_MAP).process();
             default:
                 return new LexBotResponseBuilder()
                         .buildCloseDialogActionResponse()
@@ -48,5 +60,14 @@ public class AdaLambdaHandler implements LexBotRequestHandler {
         } catch (JsonProcessingException e) {
             System.out.println("Failed to log");
         }
+    }
+
+    private static Map<String, TwoPlayerGame> buildMapOfGames() {
+        final TwoPlayerGameFactory twoPlayerGameFactory = new TwoPlayerGameFactory();
+
+        return Stream.of(
+                twoPlayerGameFactory.createRockPaperScissorsGame(),
+                twoPlayerGameFactory.createRockPaperScissorsLizardSpockGame())
+                .collect(toMap(TwoPlayerGame::getGameName, Function.identity()));
     }
 }

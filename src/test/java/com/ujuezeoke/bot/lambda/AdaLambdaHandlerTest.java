@@ -65,13 +65,24 @@ public class AdaLambdaHandlerTest {
                 .getMessage()
                 .getContent(), is("I am Ada, the arbiter.\n" +
                 "I can help you settle disputes.\nFor Example, " +
-                "if you and a friend had trouble deciding between two valid web frameworks" +
+                "if you and a friend had trouble deciding between two valid web frameworks, " +
                 "you can say \"Help me decide between Bootstrap and Semantic UI\". " +
                 "You would then be presented with a list of games to play to help the decision process.\n\n" +
                 "To play a game, say \"Play <GameName>\".\n" +
                 "To list name of available games, \"List games\".\n" +
                 "How would you like me to help you today?"));
 
+    }
+
+    @Test
+    public void sendElicitIntentDialogWhenListAdaArbiterGamesIntentIsRecieved() {
+        when(currentIntent.getName()).thenReturn("ListAdaArbiterGames");
+        when(lexBotRequest.getCurrentIntent()).thenReturn(currentIntent);
+
+        final LexBotResponse lexBotResponse =
+                underTest.handleRequest(lexBotRequest, context);
+
+        assertThat(lexBotResponse.getDialogAction().getType(), is(DialogActionType.ElicitIntent));
     }
 
     private CloseDialogAction getAsCloseDialogAction(LexBotResponse lexBotResponse) {

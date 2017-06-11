@@ -8,10 +8,10 @@ import com.ujuezeoke.bot.template.model.response.model.dialogaction.message.Dial
 /**
  * Created by Obianuju Ezeoke on 11/06/2017.
  */
-public class AmazonHelpIntentHandler {
+public class GetAdaArbiterHelpIntentHandler {
     private final LexBotRequest input;
 
-    public AmazonHelpIntentHandler(LexBotRequest input) {
+    public GetAdaArbiterHelpIntentHandler(LexBotRequest input) {
         this.input = input;
     }
 
@@ -19,12 +19,11 @@ public class AmazonHelpIntentHandler {
         return new LexBotResponseBuilder()
                 .buildElicitIntentDialogActionResponse()
                 .withMessage(DialogActionMessageContentType.PlainText, "I am Ada, the arbiter.\n" +
-                        "I can help you settle disputes.\n" +
-                        "For Example, if you and a friend had trouble deciding " +
-                        "between two valid web frameworksyou can say " +
-                        "\"Help me decide between Bootstrap and Semantic UI\". " +
-                        "You would then be presented with a list of games to play " +
-                        "to help the decision process.\n\nTo play a game, say \"Play <GameName>\".\n" +
+                        "I can help you settle disputes.\nFor Example, " +
+                        "if you and a friend had trouble deciding between two valid web frameworks, " +
+                        "you can say \"Help me decide between Bootstrap and Semantic UI\". " +
+                        "You would then be presented with a list of games to play to help the decision process.\n\n" +
+                        "To play a game, say \"Play <GameName>\".\n" +
                         "To list name of available games, \"List games\".\n" +
                         "How would you like me to help you today?")
                 .build();
