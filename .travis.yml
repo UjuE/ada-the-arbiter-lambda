@@ -3,3 +3,5 @@ jdk:
   - oraclejdk8
 script:
  ./gradlew clean build publish
+notifications:
+    slack: conversinator:eCJM4feMnddtjb6cmnGIrZYn
