@@ -1,5 +1,6 @@
 package com.ujuezeoke.bot.lambda.handler;
 
+import com.ujuezeoke.bot.lambda.GameInformation;
 import com.ujuezeoke.bot.template.model.request.LexBotRequest;
 import com.ujuezeoke.bot.template.model.response.LexBotResponse;
 import com.ujuezeoke.bot.template.model.response.LexBotResponseBuilder;
@@ -24,11 +25,11 @@ public class PlayGameIntentHandler {
     private static final String PLAYER_TWO_LABEL = "playerTwo";
     private static final String GAME_NAME_SLOT_NAME = "gameName";
     private final LexBotRequest input;
-    private final Map<String, TwoPlayerGame> availableGamesMap;
+    private final GameInformation gameInformation;
 
-    public PlayGameIntentHandler(LexBotRequest input, Map<String, TwoPlayerGame> availableGamesMap) {
+    public PlayGameIntentHandler(LexBotRequest input, GameInformation gameInformation) {
         this.input = input;
-        this.availableGamesMap = availableGamesMap;
+        this.gameInformation = gameInformation;
     }
 
     public LexBotResponse process() {
@@ -40,7 +41,7 @@ public class PlayGameIntentHandler {
                 && Optional.ofNullable(slots.get(PLAYER_TWO_LABEL)).isPresent()
                 && Optional.ofNullable(slots.get(GAME_NAME_SLOT_NAME)).isPresent()) {
             final TwoPlayerGame twoPlayerGame =
-                    availableGamesMap.get(slots.get(GAME_NAME_SLOT_NAME).toString().replaceAll(" ", ""));
+                    gameInformation.gameWithName(slots.get(GAME_NAME_SLOT_NAME).toString().replaceAll(" ", ""));
             final GamePlayResult gamePlayResult = twoPlayerGame.playComputerVsComputer(
                     new PlayerLabel(slots.get(PLAYER_ONE_LABEL).toString()),
                     new PlayerLabel(slots.get(PLAYER_TWO_LABEL).toString()));
@@ -60,7 +61,7 @@ public class PlayGameIntentHandler {
                     .withSlotToElicit(GAME_NAME_SLOT_NAME)
                     .withMessage(PlainText,
                             "What game would you like to play? \n"
-                                    +availableGamesMap.keySet().stream().collect(joining(",\n")))
+                                    + gameInformation.gameNames().keySet().stream().collect(joining(",\n")))
                     .build();
         } else {
             return new LexBotResponseBuilder()
@@ -75,7 +76,7 @@ public class PlayGameIntentHandler {
         }
     }
 
-    private String determine(Map<String, Object> slots) {
+    private String  determine(Map<String, Object> slots) {
         if (slots.containsKey(PLAYER_ONE_LABEL) && !Optional.ofNullable(slots.get(PLAYER_ONE_LABEL)).isPresent()) {
             return PLAYER_ONE_LABEL;
         }

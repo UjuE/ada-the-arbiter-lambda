@@ -13,12 +13,7 @@ import com.ujuezeoke.bot.template.model.response.LexBotResponse;
 import com.ujuezeoke.bot.template.model.response.LexBotResponseBuilder;
 import com.ujuezeoke.bot.template.model.response.model.dialogaction.FulfillmentState;
 import com.ujuezeoke.bot.template.model.response.model.dialogaction.message.DialogActionMessageContentType;
-import com.ujuezeoke.game.TwoPlayerGame;
 import com.ujuezeoke.game.TwoPlayerGameFactory;
-
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -28,8 +23,13 @@ import static java.util.stream.Collectors.toMap;
  */
 public class AdaLambdaHandler implements LexBotRequestHandler {
 
+    private static final TwoPlayerGameFactory twoPlayerGameFactory = new TwoPlayerGameFactory();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final Map<String, TwoPlayerGame> AVAILABLE_GAMES_MAP = buildMapOfGames();
+    private static final GameGenericAttachmentInformation GAME_GENERIC_ATTACHMENT_INFORMATION = new GameGenericAttachmentInformation();
+    private static final GameInformation GAME_INFORMATION = new GameInformation(GAME_GENERIC_ATTACHMENT_INFORMATION,
+            twoPlayerGameFactory.createRockPaperScissorsGame(),
+            twoPlayerGameFactory.createRockPaperScissorsLizardSpockGame()
+    );
 
     @Override
     public LexBotResponse handleRequest(LexBotRequest input, Context context) {
@@ -45,9 +45,9 @@ public class AdaLambdaHandler implements LexBotRequestHandler {
             case "GetAdaArbiterHelp":
                 return new GetAdaArbiterHelpIntentHandler(input).process();
             case "ListAdaArbiterGames":
-                return new ListAdaArbiterGamesIntentHandler(AVAILABLE_GAMES_MAP).process();
+                return new ListAdaArbiterGamesIntentHandler(GAME_INFORMATION).process();
             case "PlayGame":
-                return new PlayGameIntentHandler(input, AVAILABLE_GAMES_MAP).process();
+                return new PlayGameIntentHandler(input, GAME_INFORMATION).process();
             default:
                 return new LexBotResponseBuilder()
                         .buildCloseDialogActionResponse()
@@ -65,12 +65,4 @@ public class AdaLambdaHandler implements LexBotRequestHandler {
         }
     }
 
-    private static Map<String, TwoPlayerGame> buildMapOfGames() {
-        final TwoPlayerGameFactory twoPlayerGameFactory = new TwoPlayerGameFactory();
-
-        return Stream.of(
-                twoPlayerGameFactory.createRockPaperScissorsGame(),
-                twoPlayerGameFactory.createRockPaperScissorsLizardSpockGame())
-                .collect(toMap(TwoPlayerGame::getGameName, Function.identity()));
-    }
 }
