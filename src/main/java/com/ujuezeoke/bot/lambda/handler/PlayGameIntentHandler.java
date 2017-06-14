@@ -76,6 +76,13 @@ public class PlayGameIntentHandler {
         }
     }
 
+    private Object returnInCorrectFormat(Object playerLabel) {
+        if(playerLabel == null){
+            return playerLabel;
+        }
+        return playerLabel.toString().replaceAll("(U[0-9]{1}[A-Z0-9]{4,})", "<@$1>");
+    }
+
     private String  determine(Map<String, Object> slots) {
         if (slots.containsKey(PLAYER_ONE_LABEL) && !Optional.ofNullable(slots.get(PLAYER_ONE_LABEL)).isPresent()) {
             return PLAYER_ONE_LABEL;
@@ -96,10 +103,10 @@ public class PlayGameIntentHandler {
 
         final PlayerDetails firstPlayerDetails = gamePlayResult.getFirstPlayerDetails();
         final PlayerDetails secondPlayerDetails = gamePlayResult.getSecondPlayerDetails();
-        stringBuilder.append(firstPlayerDetails.getPlayerName()).append(" played ")
+        stringBuilder.append(returnInCorrectFormat(firstPlayerDetails.getPlayerName())).append(" played ")
                 .append(firstPlayerDetails.getGameThrow())
                 .append("\n")
-                .append(secondPlayerDetails.getPlayerName()).append(" played ")
+                .append(returnInCorrectFormat(secondPlayerDetails.getPlayerName())).append(" played ")
                 .append(secondPlayerDetails.getGameThrow());
         return stringBuilder.toString();
     }
