@@ -45,7 +45,7 @@ public class GameInformation {
         return gameNames().entrySet().stream()
                 .map(entry -> new GenericAttachments(
                         entry.getValue(),
-                        "",
+                        "game",
                         gameGenericAttachmentInformation.getImageUrlFor(entry.getKey()),
                         gameGenericAttachmentInformation.getAttachmentLinkUrlFor(entry.getKey()),
                         new Buttons(entry.getValue(), "Play " + entry.getKey())))

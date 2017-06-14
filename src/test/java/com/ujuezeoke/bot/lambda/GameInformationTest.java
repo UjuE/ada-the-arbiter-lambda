@@ -60,7 +60,7 @@ public class GameInformationTest {
 
         final GameInformation gameInformation = new GameInformation(gameGenericAttachmentInformation, gameOne, gameTwo, rockPaperScissors);
         assertThat(gameInformation.genericAttachments(), hasItems(
-                new GenericAttachments("Game One", "",
+                new GenericAttachments("Game One", "game",
                         "url",
                         "anotherUrl",
                         new Buttons("Game One", "Play GameOne"))
