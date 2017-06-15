@@ -103,7 +103,9 @@ public class PlayGameIntentHandler {
 
         final PlayerDetails firstPlayerDetails = gamePlayResult.getFirstPlayerDetails();
         final PlayerDetails secondPlayerDetails = gamePlayResult.getSecondPlayerDetails();
-        stringBuilder.append(returnInCorrectFormat(firstPlayerDetails.getPlayerName())).append(" played ")
+        stringBuilder
+                .append("\n")
+                .append(returnInCorrectFormat(firstPlayerDetails.getPlayerName())).append(" played ")
                 .append(firstPlayerDetails.getGameThrow())
                 .append("\n")
                 .append(returnInCorrectFormat(secondPlayerDetails.getPlayerName())).append(" played ")
